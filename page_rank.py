@@ -14,11 +14,20 @@ def load_graph(args):
     Returns:
     A dict mapling a URL (str) to a list of target URLs (str).
     """
+    # Create dictionary to store connections in
+    pageRank_dict = {}
     # Iterate through the file line by line
     for line in args.datafile:
         # And split each line into two URLs
         node, target = line.split()
-        raise RuntimeError("This function is not implemented yet.")
+
+        if node in pageRank_dict:
+            pageRank_dict[node].append(target)
+        else:
+            pageRank_dict[node] = [target]
+
+
+        #raise RuntimeError("This function is not implemented yet.")
 
 
 def print_stats(graph):
