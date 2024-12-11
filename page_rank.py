@@ -103,9 +103,20 @@ def distribution_page_rank(graph, args):
     the probability that a random walker is currently on any node.
     """
 
+    steps = args.steps * args.repeats
+    nodes = list(graph.nodes)
+    node_prob[node] = 1 / len(nodes)
+    counter = 0
+    while counter < steps:
+        for node in nodes:
+            next_prob[node] = 0
+        for node in nodes:
+            p = node_prob[node] / graph.out_degree(node)
+            for target in graph.neighbors(node):
+                next_prob[target] += p
+        node_prob = next_prob
 
-
-    raise RuntimeError("This function is not implemented yet.")
+    #raise RuntimeError("This function is not implemented yet.")
 
 
 
