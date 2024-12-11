@@ -2,6 +2,11 @@ import sys
 import os
 import time
 import argparse
+import random
+import networkx as nx
+import numpy as np
+from direct.task.TaskTester import counter
+
 from progress import Progress
 
 
@@ -14,20 +19,29 @@ def load_graph(args):
     Returns:
     A dict mapling a URL (str) to a list of target URLs (str).
     """
+
+    #creating an adjacenecy list to store graph data
     # Create dictionary to store connections in
-    pageRank_dict = {}
+    #pageRank_dict = {}
     # Iterate through the file line by line
-    for line in args.datafile:
+    #for line in args.datafile:
         # And split each line into two URLs
+    #    node, target = line.split()
+
+    #    if node in pageRank_dict:
+    #        pageRank_dict[node].append(target)
+    #     else:
+    #        pageRank_dict[node] = [target]
+    #return pageRank_dict
+
+    #using networkx to store graph data
+    pageRank_dict = nx.DiGraph()
+
+    for line in args.datafile:
+
         node, target = line.split()
+        pageRank_dict.add_edge(node, target)
 
-        if node in pageRank_dict:
-            pageRank_dict[node].append(target)
-        else:
-            pageRank_dict[node] = [target]
-
-
-        #raise RuntimeError("This function is not implemented yet.")
 
 
 def print_stats(graph):
@@ -42,6 +56,8 @@ def stochastic_page_rank(graph, args):
     graph -- a graph object as returned by load_graph()
     args -- arguments named tuple
 
+
+
     Returns:
     A dict that assigns each page its hit frequency
 
@@ -49,7 +65,28 @@ def stochastic_page_rank(graph, args):
     a random walk that starts on a random node will after n_steps end
     on each node of the given graph.
     """
-    raise RuntimeError("This function is not implemented yet.")
+
+    steps = args.steps * args.repeats
+
+    nodes = list(graph.nodes)
+    hit_count = [0 for _ in range(graph.number_of_nodes())]
+    first_node = random.choice(nodes)
+    hit_count[first_node] += 1
+    out = list(graph.out_edges(first_node))
+
+    counter = 0
+    while counter < steps:
+        if len(out) == 0:
+            current_node = random.choice(nodes)
+        else:
+            new_node = random.choice(out)
+            current_node = new_node[1]
+
+        hit_count[current_node] += 1
+        out = list(graph.out_edges(current_node))
+
+
+    #raise RuntimeError("This function is not implemented yet.")
 
 
 def distribution_page_rank(graph, args):
@@ -65,7 +102,13 @@ def distribution_page_rank(graph, args):
     This function estimates the Page Rank by iteratively calculating
     the probability that a random walker is currently on any node.
     """
+
+
+
     raise RuntimeError("This function is not implemented yet.")
+
+
+
 
 
 parser = argparse.ArgumentParser(description="Estimates page ranks from link information")
