@@ -46,7 +46,11 @@ def load_graph(args):
 
 def print_stats(graph):
         """Print number of nodes and edges in the given graph"""
-        raise RuntimeError("This function is not implemented yet.")
+
+        print("number of nodes:", graph.number_of_nodes())
+        print("number of edges:", graph.number_of_edges())
+
+        #raise RuntimeError("This function is not implemented yet.")
 
 
 def stochastic_page_rank(graph, args):
@@ -103,9 +107,14 @@ def distribution_page_rank(graph, args):
     the probability that a random walker is currently on any node.
     """
 
+    node_prob = [0 for _ in range (graph.number_of_nodes())]
+    next_prob = [0 for _ in range(graph.number_of_nodes())]
+
+
     steps = args.steps * args.repeats
     nodes = list(graph.nodes)
-    node_prob[node] = 1 / len(nodes)
+    for node in nodes:
+        node_prob[node] = 1 / len(nodes)
     counter = 0
     while counter < steps:
         for node in nodes:
