@@ -122,11 +122,11 @@ def distribution_page_rank(graph, args):
             attribute = [(node, {"next_prob": 0})]
             nx.set_node_attributes(graph, attribute)
         for node in nodes:
-            p = nx.get_node_attributes(graph, "node_prob") / graph.out_degree(node)
+            p = node.node_prob / graph.out_degree(node)
             for target in graph.neighbors(node):
-                nx.get_node_attributes(graph, "next_prob") += p
+                target.node_prob = target.node_prob + p
         for node in nodes:
-            nx.set_node_attributes(graph, {"node_prob": next_prob})
+            node.node_prob = node.next_prob
 
     #raise RuntimeError("This function is not implemented yet.")
 
