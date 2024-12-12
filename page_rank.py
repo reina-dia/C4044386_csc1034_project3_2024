@@ -40,6 +40,7 @@ def load_graph(args):
     for line in args.datafile:
 
         node, target = line.split()
+        pageRank_dict.add_node(node)
         pageRank_dict.add_edge(node, target)
     return pageRank_dict
 
@@ -76,7 +77,7 @@ def stochastic_page_rank(graph, args):
     nodes = list(graph.nodes)
     hit_count = [0 for _ in range(graph.number_of_nodes())]
     first_node = random.choice(nodes)
-    hit_count[first_node] += 1
+    first_node[hit_count] += 1
     out = list(graph.out_edges(first_node))
 
     counter = 0
@@ -87,7 +88,7 @@ def stochastic_page_rank(graph, args):
             new_node = random.choice(out)
             current_node = new_node[1]
 
-        hit_count[current_node] += 1
+        current_node[hit_count] += 1
         out = list(graph.out_edges(current_node))
 
 
@@ -108,23 +109,24 @@ def distribution_page_rank(graph, args):
     the probability that a random walker is currently on any node.
     """
 
-    node_prob = [0 for _ in range (graph.number_of_nodes())]
-    next_prob = [0 for _ in range(graph.number_of_nodes())]
-
 
     steps = args.steps
     nodes = list(graph.nodes)
+    value = 1 / len(nodes)
     for node in nodes:
-        node_prob[node] = 1 / len(nodes)
+        attribute = [(node, {"node_prob": value})]
+        nx.set_node_attributes(graph, attribute)
     counter = 0
     while counter < steps:
         for node in nodes:
-            next_prob[node] = 0
+            attribute = [(node, {"next_prob": 0})]
+            nx.set_node_attributes(graph, attribute)
         for node in nodes:
-            p = node_prob[node] / graph.out_degree(node)
+            p = nx.get_node_attributes(graph, "node_prob") / graph.out_degree(node)
             for target in graph.neighbors(node):
-                next_prob[target] += p
-        node_prob = next_prob
+                nx.get_node_attributes(graph, "next_prob") += p
+        for node in nodes:
+            nx.set_node_attributes(graph, {"node_prob": next_prob})
 
     #raise RuntimeError("This function is not implemented yet.")
 
