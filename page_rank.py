@@ -41,14 +41,15 @@ def load_graph(args):
 
         node, target = line.split()
         pageRank_dict.add_edge(node, target)
+    return pageRank_dict
 
 
 
 def print_stats(graph):
         """Print number of nodes and edges in the given graph"""
 
-        print("number of nodes:", graph.number_of_nodes())
-        print("number of edges:", graph.number_of_edges())
+        print("number of nodes:", len(graph.nodes))
+        print("number of edges:", len(graph.edges))
 
         #raise RuntimeError("This function is not implemented yet.")
 
@@ -70,7 +71,7 @@ def stochastic_page_rank(graph, args):
     on each node of the given graph.
     """
 
-    steps = args.steps * args.repeats
+    repeats = args.repeats
 
     nodes = list(graph.nodes)
     hit_count = [0 for _ in range(graph.number_of_nodes())]
@@ -79,7 +80,7 @@ def stochastic_page_rank(graph, args):
     out = list(graph.out_edges(first_node))
 
     counter = 0
-    while counter < steps:
+    while counter < repeats:
         if len(out) == 0:
             current_node = random.choice(nodes)
         else:
@@ -111,7 +112,7 @@ def distribution_page_rank(graph, args):
     next_prob = [0 for _ in range(graph.number_of_nodes())]
 
 
-    steps = args.steps * args.repeats
+    steps = args.steps
     nodes = list(graph.nodes)
     for node in nodes:
         node_prob[node] = 1 / len(nodes)
