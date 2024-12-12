@@ -75,9 +75,11 @@ def stochastic_page_rank(graph, args):
     repeats = args.repeats
 
     nodes = list(graph.nodes)
-    hit_count = [0 for _ in range(graph.number_of_nodes())]
+    hit_count  = {}
+    for node in nodes:
+        hit_count[node] = 0
     first_node = random.choice(nodes)
-    first_node[hit_count] += 1
+    hit_count[first_node] += 1
     out = list(graph.out_edges(first_node))
 
     counter = 0
@@ -88,7 +90,7 @@ def stochastic_page_rank(graph, args):
             new_node = random.choice(out)
             current_node = new_node[1]
 
-        current_node[hit_count] += 1
+        hit_count[current_node] += 1
         out = list(graph.out_edges(current_node))
 
 
@@ -113,20 +115,21 @@ def distribution_page_rank(graph, args):
     steps = args.steps
     nodes = list(graph.nodes)
     value = 1 / len(nodes)
+    node_prob = {}
+    next_prob = {}
     for node in nodes:
-        attribute = [(node, {"node_prob": value})]
-        nx.set_node_attributes(graph, attribute)
+        node_prob[node] = value
     counter = 0
     while counter < steps:
         for node in nodes:
-            attribute = [(node, {"next_prob": 0})]
-            nx.set_node_attributes(graph, attribute)
+            next_prob[node] = 0
         for node in nodes:
-            p = node.node_prob / graph.out_degree(node)
+            p = node_prob[node] / graph.out_degree(node)
             for target in graph.neighbors(node):
-                target.node_prob = target.node_prob + p
+                node_prob[target] += p
         for node in nodes:
-            node.node_prob = node.next_prob
+            node_prob[node] = next_prob[node]
+        counter += 1
 
     #raise RuntimeError("This function is not implemented yet.")
 
