@@ -92,6 +92,8 @@ def stochastic_page_rank(graph, args):
 
         hit_count[current_node] += 1
         out = list(graph.out_edges(current_node))
+        counter += 1
+    return hit_count
 
 
     #raise RuntimeError("This function is not implemented yet.")
@@ -120,9 +122,9 @@ def distribution_page_rank(graph, args):
     for node in nodes:
         node_prob[node] = value
     counter = 0
+    for node in nodes:
+        next_prob[node] = 0
     while counter < steps:
-        for node in nodes:
-            next_prob[node] = 0
         for node in nodes:
             p = node_prob[node] / graph.out_degree(node)
             for target in graph.neighbors(node):
@@ -130,7 +132,7 @@ def distribution_page_rank(graph, args):
         for node in nodes:
             node_prob[node] = next_prob[node]
         counter += 1
-
+    return node_prob
     #raise RuntimeError("This function is not implemented yet.")
 
 
