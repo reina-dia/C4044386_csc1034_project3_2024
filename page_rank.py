@@ -115,24 +115,30 @@ def distribution_page_rank(graph, args):
 
 
     steps = args.steps
-    nodes = list(graph.nodes)
-    value = 1 / len(nodes)
+    counter = 0
     node_prob = {}
     next_prob = {}
+    nodes = list(graph.nodes)
+    c = 1/(len(nodes))
+    check = 0
     for node in nodes:
-        node_prob[node] = value
-    counter = 0
-    for node in nodes:
-        next_prob[node] = 0
+        node_prob[node] = c
+        check += c
+        print(node_prob[node])
+    print(check)
     while counter < steps:
         for node in nodes:
-            p = node_prob[node] / graph.out_degree(node)
-            for target in graph.neighbors(node):
-                node_prob[target] += p
+            next_prob[node] = 0
         for node in nodes:
-            node_prob[node] = next_prob[node]
+            p = node_prob[node]/graph.out_degree(node)
+            group = graph.out_edges(node)
+            for node in group:
+                print(next_prob[node])
+        node_prob = next_prob.copy()
         counter += 1
     return node_prob
+
+
     #raise RuntimeError("This function is not implemented yet.")
 
 
