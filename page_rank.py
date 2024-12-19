@@ -116,31 +116,33 @@ def distribution_page_rank(graph, args):
 
     steps = args.steps
     counter = 0
+    counter_2 = 0
+    math_check = 0
     node_prob = {}
     next_prob = {}
-    nodes = list(graph.nodes)
-    c = 1/(len(nodes))
-    check = 0
-    for node in nodes:
-        node_prob[node] = c
-        next_prob[node] = 0
-        check += c
-        print(node_prob[node])
-        print(next_prob[node])
-    print(next_prob)
-    print(check)
+    for node in graph.nodes:
+        node_prob[node] = 1/len(graph.nodes)
+        math_check += 1
+        #print(node_prob[node])
     while counter < steps:
-        for node in nodes:
-            next_prob.update({node: 0})
-            out = list(graph.out_edges(node))
-            p = int(node_prob[node])/len(out)
+        for node in graph.nodes:
+            next_prob[node] = float(0)
+        for node in graph.nodes:
+            p = node_prob[node]/graph.out_degree(node)
             print(p)
-            for a in out:
-                x = next_prob[a]
-                x = x + p
-                next_prob[a] = x
-        node_prob = next_prob.copy()
+            for target in graph.neighbors(node):
+                next_prob[target] = next_prob[target] + p
+                #print(next_prob[target])
+        for node in graph.nodes:
+            node_prob[node] = next_prob[node]
+
         counter += 1
+    #print(math_check)
+    #print(node_prob)
+    #print(next_prob)
+    for node in graph.nodes:
+        counter_2 += node_prob[node]
+    print(counter_2)
     return node_prob
 
 
