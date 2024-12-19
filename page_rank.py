@@ -21,8 +21,10 @@ def load_graph(args):
     """
 
     #creating an adjacenecy list to store graph data
+
     # Create dictionary to store connections in
     #pageRank_dict = {}
+
     # Iterate through the file line by line
     #for line in args.datafile:
         # And split each line into two URLs
@@ -34,6 +36,8 @@ def load_graph(args):
     #        pageRank_dict[node] = [target]
     #return pageRank_dict
 
+    # adjacency list is similar to networkx but has less uses due to networkx having more methods that can be used
+
     #using networkx to store graph data
     pageRank_dict = nx.DiGraph()
 
@@ -43,7 +47,7 @@ def load_graph(args):
         pageRank_dict.add_node(node)
         pageRank_dict.add_edge(node, target)
     return pageRank_dict
-
+    #networkx has a library of methods that are useful in the page_rank methods
 
 
 def print_stats(graph):
@@ -52,7 +56,6 @@ def print_stats(graph):
         print("number of nodes:", len(graph.nodes))
         print("number of edges:", len(graph.edges))
 
-        #raise RuntimeError("This function is not implemented yet.")
 
 
 def stochastic_page_rank(graph, args):
@@ -78,26 +81,28 @@ def stochastic_page_rank(graph, args):
     hit_count  = {}
     for node in nodes:
         hit_count[node] = 0
+        #initializes the hit_count dictionary
     first_node = random.choice(nodes)
     hit_count[first_node] += 1
     out = list(graph.out_edges(first_node))
+    #obtains the first node, and updates the required fields
+
 
     counter = 0
     while counter < repeats:
         if len(out) == 0:
             current_node = random.choice(nodes)
+            #updates the system for a "dead end" node
         else:
             new_node = random.choice(out)
             current_node = new_node[1]
+            #updates the system for a node with neighbors
 
         hit_count[current_node] += 1
         out = list(graph.out_edges(current_node))
         counter += 1
+        #updates necessary fields
     return hit_count
-
-
-    #raise RuntimeError("This function is not implemented yet.")
-
 
 def distribution_page_rank(graph, args):
     """Probabilistic PageRank estimation
@@ -120,27 +125,23 @@ def distribution_page_rank(graph, args):
     next_prob = {}
     for node in graph.nodes:
         node_prob[node] = 1/len(graph.nodes)
+        #initializes the node_prob dictionary
     while counter < steps:
         for node in graph.nodes:
             next_prob[node] = float(0)
+            #initializes on first loop the next_prob dictionary, resets it on following loops
         for node in graph.nodes:
             p = node_prob[node]/graph.out_degree(node)
-            print(p)
             for target in graph.neighbors(node):
                 next_prob[target] = next_prob[target] + p
+                #updates the next_prob dictionary for each node leading into the target node
         for node in graph.nodes:
             node_prob[node] = next_prob[node]
+            #copies the next_prob dictionary into the node_prob dictionary
 
         counter += 1
 
     return node_prob
-
-
-    #raise RuntimeError("This function is not implemented yet.")
-
-
-
-
 
 parser = argparse.ArgumentParser(description="Estimates page ranks from link information")
 parser.add_argument('datafile', nargs='?', type=argparse.FileType('r'), default=sys.stdin,
