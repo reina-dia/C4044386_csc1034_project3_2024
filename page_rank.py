@@ -123,17 +123,22 @@ def distribution_page_rank(graph, args):
     check = 0
     for node in nodes:
         node_prob[node] = c
+        next_prob[node] = 0
         check += c
         print(node_prob[node])
+        print(next_prob[node])
+    print(next_prob)
     print(check)
     while counter < steps:
         for node in nodes:
-            next_prob[node] = 0
-        for node in nodes:
-            p = node_prob[node]/graph.out_degree(node)
-            group = graph.out_edges(node)
-            for node in group:
-                print(next_prob[node])
+            next_prob.update({node: 0})
+            out = list(graph.out_edges(node))
+            p = int(node_prob[node])/len(out)
+            print(p)
+            for a in out:
+                x = next_prob[a]
+                x = x + p
+                next_prob[a] = x
         node_prob = next_prob.copy()
         counter += 1
     return node_prob
