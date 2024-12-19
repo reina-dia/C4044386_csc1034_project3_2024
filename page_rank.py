@@ -116,14 +116,10 @@ def distribution_page_rank(graph, args):
 
     steps = args.steps
     counter = 0
-    counter_2 = 0
-    math_check = 0
     node_prob = {}
     next_prob = {}
     for node in graph.nodes:
         node_prob[node] = 1/len(graph.nodes)
-        math_check += 1
-        #print(node_prob[node])
     while counter < steps:
         for node in graph.nodes:
             next_prob[node] = float(0)
@@ -132,17 +128,11 @@ def distribution_page_rank(graph, args):
             print(p)
             for target in graph.neighbors(node):
                 next_prob[target] = next_prob[target] + p
-                #print(next_prob[target])
         for node in graph.nodes:
             node_prob[node] = next_prob[node]
 
         counter += 1
-    #print(math_check)
-    #print(node_prob)
-    #print(next_prob)
-    for node in graph.nodes:
-        counter_2 += node_prob[node]
-    print(counter_2)
+
     return node_prob
 
 
