@@ -4,8 +4,6 @@ import time
 import argparse
 import random
 import networkx as nx
-import numpy as np
-from direct.task.TaskTester import counter
 
 from progress import Progress
 
@@ -37,6 +35,35 @@ def load_graph(args):
     #return pageRank_dict
 
     # adjacency list is similar to networkx but has less uses due to networkx having more methods that can be used
+
+
+    #advanced adjacency list
+    #pageRank_dict = {}
+    #for line in args.datafile:
+    #    node, target = line.split()
+    #    if node not in pageRank_dict:
+    #        pageRank_dict[node] = {}
+    #    pageRank_dict[node][target] = (node,"->",target)
+    #return pageRank_dict
+
+    #this method creates a dictionary of dictionary to store the graph data. It is more complicted than need, and would
+    #be more useful if the nodes where weighted, which in this exercise they are not
+
+
+
+    #vertex set and edge dictionary
+    #V = []
+    #E = {}
+    #for line in args.datafile:
+    #    node, target = line.split()
+    #    if node not in V:
+    #        V.append(node)
+    #    E[node] = target
+    #return E, V
+    #This method uses pre-existing methods. Nothing unique to python, creates a longer dictionary for edge list
+    #Which is less efficient
+
+
 
     #using networkx to store graph data
     pageRank_dict = nx.DiGraph()
